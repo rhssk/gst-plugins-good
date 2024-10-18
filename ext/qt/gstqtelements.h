@@ -26,6 +26,37 @@ G_BEGIN_DECLS
 
 void qt5_element_init (GstPlugin * plugin);
 
+#ifndef GST_ELEMENT_REGISTER_DECLARE
+#define GST_ELEMENT_REGISTER_DECLARE(element) \
+G_BEGIN_DECLS \
+gboolean G_PASTE(gst_element_register_, element) (GstPlugin * plugin); \
+G_END_DECLS
+#endif
+
+#ifndef GST_ELEMENT_REGISTER
+#define GST_ELEMENT_REGISTER(element, plugin) G_PASTE(gst_element_register_, element) (plugin)
+#endif
+
+#ifndef _GST_ELEMENT_REGISTER_DEFINE_BEGIN
+#define _GST_ELEMENT_REGISTER_DEFINE_BEGIN(element) \
+G_BEGIN_DECLS \
+gboolean G_PASTE (gst_element_register_, element) (GstPlugin * plugin) \
+{ \
+  {
+#endif
+
+#ifndef _GST_ELEMENT_REGISTER_DEFINE_END
+#define _GST_ELEMENT_REGISTER_DEFINE_END(element_name, rank, type) \
+  } \
+  return gst_element_register (plugin, element_name, rank, type); \
+} \
+G_END_DECLS
+#endif
+
+#ifndef GST_ELEMENT_REGISTER_DEFINE_WITH_CODE
+#define GST_ELEMENT_REGISTER_DEFINE_WITH_CODE(e, e_n, r, t, _c_) _GST_ELEMENT_REGISTER_DEFINE_BEGIN(e) {_c_;} _GST_ELEMENT_REGISTER_DEFINE_END(e_n, r, t)
+#endif
+
 GST_ELEMENT_REGISTER_DECLARE (qmlglsink);
 GST_ELEMENT_REGISTER_DECLARE (qmlglsrc);
 GST_ELEMENT_REGISTER_DECLARE (qmlgloverlay);

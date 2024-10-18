@@ -427,6 +427,7 @@ QtGLVideoItem::mapPointToStreamSize(QPointF pos)
 void
 QtGLVideoItem::wheelEvent(QWheelEvent * event)
 {
+#if GST_CHECK_VERSION(1, 18, 0)
   g_mutex_lock (&this->priv->lock);
   QPoint delta = event->angleDelta();
   GstElement *element = GST_ELEMENT_CAST (g_weak_ref_get (&this->priv->sink));
@@ -442,6 +443,7 @@ QtGLVideoItem::wheelEvent(QWheelEvent * event)
     g_object_unref (element);
   }
   g_mutex_unlock (&this->priv->lock);
+#endif
 }
 
 void
